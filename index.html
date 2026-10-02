@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaveesha Gihan Photography | Capturing Moments</title>
+    
+    <!-- Fonts: Playfair Display for elegant headings, Inter for clean body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f0f11',
+                        charcoal: '#1a1a1d',
+                        gold: '#d4af37',
+                        'gold-light': '#f3e5ab',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    transitionDuration: {
+                        '400': '400ms',
+                        '2000': '2000ms',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Animations and Layouts -->
+    <style>
+        body {
+            background-color: #0f0f11;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Ken Burns Effect */
+        .ken-burns-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .ken-burns-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            animation: kenBurns 20s ease-out infinite alternate;
+            z-index: -2;
+        }
+        .ken-burns-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(15, 15, 17, 0.4), rgba(15, 15, 17, 0.9));
+            z-index: -1;
+        }
+        @keyframes kenBurns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.15); }
+        }
+
+        /* Scroll Reveal Utility Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* CSS Masonry */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1rem;
+        }
+        @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        
+        /* Image Hover Zoom */
+        .hover-zoom img {
+            transition: transform 0.7s ease;
+        }
+        .hover-zoom:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f0f11; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+
+        /* Lightbox Overlay */
+        #lightbox {
+            backdrop-filter: blur(8px);
+            background-color: rgba(15, 15, 17, 0.95);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-dark">
+
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 py-6 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto flex justify-between items-center relative">
+            <a href="#" class="text-2xl font-serif text-white tracking-widest uppercase font-semibold z-50">
+                K.G<span class="text-gold">.</span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#home" class="text-sm tracking-wider hover:text-gold transition-colors uppercase">Home</a>
+                <a href="#about" class="text-sm tracking-wider hover:text-gold transition-colors uppercase">About</a>
+                <a href="#portfolio" class="text-sm tracking-wider hover:text-gold transition-colors uppercase">Portfolio</a>
+                <a href="#services" class="text-sm tracking-wider hover:text-gold transition-colors uppercase">Services</a>
+                <a href="#style" class="text-sm tracking-wider hover:text-gold transition-colors uppercase">Style</a>
+                <a href="#contact" class="px-5 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition-all rounded-sm uppercase text-sm tracking-wider">Contact</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none z-50">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-dark flex flex-col items-center justify-center space-y-8 transform translate-x-full transition-transform duration-300 md:hidden z-40">
+            <a href="#home" class="mobile-link text-2xl font-serif hover:text-gold transition-colors">Home</a>
+            <a href="#about" class="mobile-link text-2xl font-serif hover:text-gold transition-colors">About</a>
+            <a href="#portfolio" class="mobile-link text-2xl font-serif hover:text-gold transition-colors">Portfolio</a>
+            <a href="#services" class="mobile-link text-2xl font-serif hover:text-gold transition-colors">Services</a>
+            <a href="#style" class="mobile-link text-2xl font-serif hover:text-gold transition-colors">Style</a>
+            <a href="#contact" class="mobile-link text-2xl font-serif text-gold border-b border-gold pb-1">Contact</a>
+        </div>
+    </header>
+
+    <section id="home" class="relative h-screen w-full flex items-center justify-center ken-burns-container">
+        <div class="ken-burns-bg"></div>
+        <div class="ken-burns-overlay"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <p class="text-gold tracking-[0.3em] text-sm md:text-base uppercase mb-4 reveal active">Est. 2024</p>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 leading-tight reveal active" style="transition-delay: 200ms;">
+                Kaveesha Gihan <br> <span class="italic text-gray-300 text-4xl md:text-6xl">Photography</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 font-light tracking-wide mb-10 reveal active" style="transition-delay: 400ms;">
+                Capturing Moments. Creating Memories.
+            </p>
+            <div class="reveal active" style="transition-delay: 600ms;">
+                <a href="#portfolio" class="inline-block border-b-2 border-gold pb-1 text-white hover:text-gold transition-colors uppercase tracking-widest text-sm">
+                    View Portfolio
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce z-10 text-gray-500">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 bg-dark relative">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Image Side -->
+                <div class="relative reveal">
+                    <div class="absolute -inset-4 border border-gray-800 rounded-lg transform translate-x-4 translate-y-4"></div>
+                    <img src="IMG_2683.jpg" alt="Kaveesha Gihan" class="relative z-10 w-full h-[600px] object-cover rounded-lg shadow-2xl grayscale hover:grayscale-0 transition-all duration-700" onerror="this.src='https://placehold.co/800x1000/1a1a1d/d4af37?text=Kaveesha+Gihan'">
+                </div>
+                
+                <!-- Text & Stats Side -->
+                <div class="reveal">
+                    <h4 class="text-gold tracking-widest uppercase text-sm mb-3">Behind the Camera</h4>
+                    <h2 class="text-4xl md:text-5xl font-serif mb-6">Hello, I'm Kaveesha</h2>
+                    <p class="text-gray-400 leading-relaxed mb-6 font-light">
+                        Photography is more than just hitting the shutter—it's about preserving a feeling, a moment in time that you can revisit forever. With a keen eye for detail and a passion for storytelling, I focus on capturing the authentic emotions that make your moments unique.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed mb-10 font-light">
+                        Whether it's the raw joy of a wedding day, the vibrant energy of an event, or the quiet intimacy of a portrait session, my goal is to create visual legacies that speak volumes.
+                    </p>
+
+                    <!-- Exact Requested Stats -->
+                    <div class="grid grid-cols-3 gap-6 pt-8 border-t border-gray-800">
+                        <div>
+                            <h3 class="text-3xl font-serif text-white mb-2">2+</h3>
+                            <p class="text-xs text-gold uppercase tracking-wider">Years<br>Experience</p>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-serif text-white mb-2">25+</h3>
+                            <p class="text-xs text-gold uppercase tracking-wider">Events<br>Captured</p>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-serif text-white mb-2">0</h3>
+                            <p class="text-xs text-gold uppercase tracking-wider">Awards<br>(Yet)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-charcoal">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal">
+                <h4 class="text-gold tracking-widest uppercase text-sm mb-3">Specialties</h4>
+                <h2 class="text-4xl md:text-5xl font-serif">Photography Categories</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Categories Array -->
+                <script>
+                    const categories = [
+                        { name: 'Portrait', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80' },
+                        { name: 'Wedding', img: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&q=80' },
+                        { name: 'Event', img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&q=80' },
+                        { name: 'Couple', img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&q=80' },
+                        { name: 'Fashion', img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=500&q=80' },
+                        { name: 'Street', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80' },
+                        { name: 'Nature', img: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=500&q=80' },
+                        { name: 'Creative', img: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=500&q=80' }
+                    ];
+
+                    categories.forEach((cat, index) => {
+                        let delay = index * 100;
+                        document.write(`
+                            <div class="relative group aspect-[4/5] overflow-hidden rounded-lg reveal hover-zoom cursor-pointer" style="transition-delay: ${delay}ms">
+                                <img src="${cat.img}" alt="${cat.name}" class="w-full h-full object-cover transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+                                <div class="absolute bottom-6 left-6">
+                                    <h3 class="text-xl font-serif text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-300">${cat.name}</h3>
+                                    <div class="w-0 group-hover:w-12 h-[2px] bg-gold mt-2 transition-all duration-300"></div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-24 bg-dark relative min-h-screen">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                <div>
+                    <h4 class="text-gold tracking-widest uppercase text-sm mb-3">Selected Works</h4>
+                    <h2 class="text-4xl md:text-5xl font-serif">Portfolio</h2>
+                </div>
+                <!-- Filters -->
+                <div class="flex flex-wrap gap-4 mt-6 md:mt-0" id="filters">
+                    <button class="filter-btn active text-sm text-white border-b-2 border-gold pb-1" data-filter="all">All</button>
+                    <button class="filter-btn text-sm text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500 pb-1 transition-all" data-filter="portraits">Portraits</button>
+                    <button class="filter-btn text-sm text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500 pb-1 transition-all" data-filter="weddings">Weddings</button>
+                    <button class="filter-btn text-sm text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500 pb-1 transition-all" data-filter="events">Events</button>
+                    <button class="filter-btn text-sm text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500 pb-1 transition-all" data-filter="couples">Couples</button>
+                    <button class="filter-btn text-sm text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500 pb-1 transition-all" data-filter="creative">Creative</button>
+                </div>
+            </div>
+
+            <!-- Masonry Grid -->
+            <div class="masonry-grid" id="gallery-grid">
+                <!-- Injected via JS to enable filtering nicely -->
+            </div>
+            
+            <div class="text-center mt-12 reveal">
+                <button class="px-8 py-3 border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors rounded-sm uppercase text-sm tracking-wider">Load More</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-charcoal">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 reveal rounded-lg overflow-hidden shadow-2xl shadow-black/50">
+                <div class="h-[500px] overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1000&q=80" alt="Featured Edit" class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000">
+                </div>
+                <div class="bg-dark p-12 lg:p-20 flex flex-col justify-center">
+                    <h4 class="text-gold tracking-widest uppercase text-sm mb-3">Featured Capture</h4>
+                    <h2 class="text-3xl md:text-4xl font-serif mb-6">The Golden Hour Silhouette</h2>
+                    <p class="text-gray-400 font-light leading-relaxed mb-8">
+                        This piece represents my core philosophy: letting natural light paint the emotion. Captured during the fleeting moments of sunset, highlighting the dramatic interplay between shadows and warmth.
+                    </p>
+                    <a href="#contact" class="inline-flex items-center text-white hover:text-gold transition-colors uppercase tracking-widest text-sm w-fit group">
+                        Book a Session 
+                        <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-24 bg-dark">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal">
+                <h4 class="text-gold tracking-widest uppercase text-sm mb-3">What I Offer</h4>
+                <h2 class="text-4xl md:text-5xl font-serif">Photography Services</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+                <!-- Service 1 -->
+                <div class="p-8 border border-gray-800 bg-charcoal/50 hover:bg-charcoal transition-colors reveal group">
+                    <i class="fas fa-camera-retro text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-xl font-serif mb-4">Portrait Sessions</h3>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed">Personal, professional, or artistic portraits that highlight your unique personality and character in any environment.</p>
+                </div>
+                <!-- Service 2 -->
+                <div class="p-8 border border-gray-800 bg-charcoal/50 hover:bg-charcoal transition-colors reveal group" style="transition-delay: 100ms;">
+                    <i class="fas fa-rings-wedding text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-xl font-serif mb-4">Weddings & Elopements</h3>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed">Comprehensive coverage of your special day, capturing both the grand moments and the intimate, unseen details.</p>
+                </div>
+                <!-- Service 3 -->
+                <div class="p-8 border border-gray-800 bg-charcoal/50 hover:bg-charcoal transition-colors reveal group" style="transition-delay: 200ms;">
+                    <i class="fas fa-glass-cheers text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-xl font-serif mb-4">Event Coverage</h3>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed">Discreet and comprehensive photography for corporate events, parties, and celebrations, focusing on the atmosphere.</p>
+                </div>
+            </div>
+
+            <!-- My Style -->
+            <div id="style" class="pt-12 border-t border-gray-800">
+                <div class="text-center mb-16 reveal">
+                    <h4 class="text-gold tracking-widest uppercase text-sm mb-3">The Approach</h4>
+                    <h2 class="text-4xl md:text-5xl font-serif">My Style</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center p-6 reveal">
+                        <div class="w-16 h-16 mx-auto bg-gray-900 rounded-full flex items-center justify-center mb-4 border border-gray-700 text-gold">
+                            <i class="fas fa-leaf text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg mb-2 text-white">Natural & Authentic</h3>
+                        <p class="text-xs text-gray-500 font-light">Minimal posing, focusing on real, unscripted interactions.</p>
+                    </div>
+                    <div class="text-center p-6 reveal" style="transition-delay: 100ms;">
+                        <div class="w-16 h-16 mx-auto bg-gray-900 rounded-full flex items-center justify-center mb-4 border border-gray-700 text-gold">
+                            <i class="fas fa-film text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg mb-2 text-white">Cinematic</h3>
+                        <p class="text-xs text-gray-500 font-light">Dramatic lighting and compositions inspired by film.</p>
+                    </div>
+                    <div class="text-center p-6 reveal" style="transition-delay: 200ms;">
+                        <div class="w-16 h-16 mx-auto bg-gray-900 rounded-full flex items-center justify-center mb-4 border border-gray-700 text-gold">
+                            <i class="fas fa-paint-brush text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg mb-2 text-white">Creative</h3>
+                        <p class="text-xs text-gray-500 font-light">Unique perspectives, playing with shadows, reflections, and blur.</p>
+                    </div>
+                    <div class="text-center p-6 reveal" style="transition-delay: 300ms;">
+                        <div class="w-16 h-16 mx-auto bg-gray-900 rounded-full flex items-center justify-center mb-4 border border-gray-700 text-gold">
+                            <i class="fas fa-heart text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg mb-2 text-white">Emotional Storytelling</h3>
+                        <p class="text-xs text-gray-500 font-light">Images curated to tell a complete, emotional narrative.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-charcoal">
+        <div class="max-w-4xl mx-auto px-6 md:px-12 text-center">
+            <h4 class="text-gold tracking-widest uppercase text-sm mb-3 reveal">Let's Work Together</h4>
+            <h2 class="text-4xl md:text-5xl font-serif mb-12 reveal">Get In Touch</h2>
+            
+            <form id="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left reveal" novalidate>
+                <div class="col-span-1">
+                    <label for="name" class="block text-xs uppercase text-gray-400 mb-2 tracking-wider">Name</label>
+                    <input type="text" id="name" required class="w-full bg-dark border border-gray-700 p-4 text-white focus:outline-none focus:border-gold transition-colors">
+                    <span class="error-msg text-red-500 text-xs hidden mt-1">Please enter your name.</span>
+                </div>
+                <div class="col-span-1">
+                    <label for="email" class="block text-xs uppercase text-gray-400 mb-2 tracking-wider">Email</label>
+                    <input type="email" id="email" required class="w-full bg-dark border border-gray-700 p-4 text-white focus:outline-none focus:border-gold transition-colors">
+                    <span class="error-msg text-red-500 text-xs hidden mt-1">Please enter a valid email.</span>
+                </div>
+                <div class="col-span-1 md:col-span-2">
+                    <label for="type" class="block text-xs uppercase text-gray-400 mb-2 tracking-wider">Shoot Type</label>
+                    <select id="type" class="w-full bg-dark border border-gray-700 p-4 text-white focus:outline-none focus:border-gold transition-colors appearance-none">
+                        <option>Wedding</option>
+                        <option>Portrait</option>
+                        <option>Event</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="col-span-1 md:col-span-2">
+                    <label for="message" class="block text-xs uppercase text-gray-400 mb-2 tracking-wider">Message</label>
+                    <textarea id="message" rows="4" required class="w-full bg-dark border border-gray-700 p-4 text-white focus:outline-none focus:border-gold transition-colors resize-none"></textarea>
+                    <span class="error-msg text-red-500 text-xs hidden mt-1">Please enter a message.</span>
+                </div>
+                <div class="col-span-1 md:col-span-2 text-center mt-6">
+                    <button type="submit" class="px-10 py-4 bg-gold text-dark font-semibold uppercase tracking-widest text-sm hover:bg-white transition-colors w-full md:w-auto">
+                        Send Message
+                    </button>
+                    <p id="success-msg" class="text-green-500 mt-4 hidden">Thank you! Your message has been sent.</p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-dark py-12 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <a href="#" class="text-2xl font-serif text-white tracking-widest uppercase font-semibold">
+                    K.G<span class="text-gold">.</span>
+                </a>
+                <p class="text-gray-500 text-xs mt-2">© 2024 Kaveesha Gihan. All rights reserved.</p>
+            </div>
+            
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-gold transition-colors text-xl"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-gold transition-colors text-xl"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-400 hover:text-gold transition-colors text-xl"><i class="fab fa-behance"></i></a>
+                <a href="#" class="text-gray-400 hover:text-gold transition-colors text-xl"><i class="fab fa-500px"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="lightbox" class="fixed inset-0 z-[60] hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+        <button id="lightbox-close" class="absolute top-6 right-6 text-gray-400 hover:text-white text-3xl focus:outline-none">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <button id="lightbox-prev" class="absolute left-6 text-gray-400 hover:text-white text-4xl focus:outline-none transform -translate-y-1/2 top-1/2">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <img id="lightbox-img" src="" alt="Gallery Image" class="max-w-[90vw] max-h-[85vh] object-contain shadow-2xl">
+        
+        <button id="lightbox-next" class="absolute right-6 text-gray-400 hover:text-white text-4xl focus:outline-none transform -translate-y-1/2 top-1/2">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* Navbar Scroll Effect */
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-dark/95', 'backdrop-blur-md', 'shadow-lg');
+                    navbar.classList.remove('py-6');
+                    navbar.classList.add('py-4');
+                } else {
+                    navbar.classList.remove('bg-dark/95', 'backdrop-blur-md', 'shadow-lg');
+                    navbar.classList.add('py-6');
+                    navbar.classList.remove('py-4');
+                }
+            });
+
+            /* Mobile Menu Toggle */
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('translate-x-full');
+                const icon = mobileBtn.querySelector('i');
+                if(mobileMenu.classList.contains('translate-x-full')){
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('translate-x-full');
+                    mobileBtn.querySelector('i').classList.remove('fa-times');
+                    mobileBtn.querySelector('i').classList.add('fa-bars');
+                });
+            });
+
+            /* Scroll Reveal Observer */
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            /* Portfolio Gallery Data */
+            const galleryData = [
+                { src: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=800&q=80', category: 'portraits', height: 'h-[400px]' },
+                { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80', category: 'weddings', height: 'h-[500px]' },
+                { src: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=800&q=80', category: 'events', height: 'h-[350px]' },
+                { src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80', category: 'portraits', height: 'h-[450px]' },
+                { src: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&q=80', category: 'weddings', height: 'h-[300px]' },
+                { src: 'https://images.unsplash.com/photo-1505932785502-3c1a8bd36d07?w=800&q=80', category: 'creative', height: 'h-[400px]' },
+                { src: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80', category: 'weddings', height: 'h-[350px]' },
+                { src: 'https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=800&q=80', category: 'couples', height: 'h-[500px]' },
+                { src: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80', category: 'creative', height: 'h-[400px]' }
+            ];
+
+            const gridContainer = document.getElementById('gallery-grid');
+            
+            // Render Gallery
+            function renderGallery(filter = 'all') {
+                gridContainer.innerHTML = '';
+                galleryData.forEach((item, index) => {
+                    if (filter === 'all' || item.category === filter) {
+                        const div = document.createElement('div');
+                        div.className = `masonry-item group hover-zoom reveal active`; // active bypasses initial reveal for filtering
+                        div.innerHTML = `
+                            <div class="${item.height} w-full overflow-hidden bg-gray-900">
+                                <img src="${item.src}" alt="${item.category}" class="w-full h-full object-cover" data-index="${index}">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
+                                    <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300 text-3xl"></i>
+                                </div>
+                            </div>
+                        `;
+                        // Click to open lightbox
+                        div.addEventListener('click', () => openLightbox(index));
+                        gridContainer.appendChild(div);
+                    }
+                });
+            }
+
+            renderGallery(); // Initial render
+
+            /* Filtering Logic */
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Update active styles
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'text-white', 'border-gold');
+                        b.classList.add('text-gray-400', 'border-transparent');
+                    });
+                    e.target.classList.add('active', 'text-white', 'border-gold');
+                    e.target.classList.remove('text-gray-400', 'border-transparent');
+                    
+                    const filter = e.target.getAttribute('data-filter');
+                    
+                    // Fade out grid, render new, fade in
+                    gridContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        renderGallery(filter);
+                        gridContainer.style.opacity = '1';
+                    }, 300);
+                });
+            });
+
+            /* Lightbox Logic */
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const btnClose = document.getElementById('lightbox-close');
+            const btnNext = document.getElementById('lightbox-next');
+            const btnPrev = document.getElementById('lightbox-prev');
+            let currentIndex = 0;
+
+            function openLightbox(index) {
+                currentIndex = index;
+                updateLightboxImg();
+                lightbox.classList.remove('hidden');
+                // Trigger reflow
+                void lightbox.offsetWidth;
+                lightbox.classList.remove('opacity-0');
+                lightbox.classList.add('opacity-100');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('opacity-100');
+                lightbox.classList.add('opacity-0');
+                setTimeout(() => {
+                    lightbox.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+
+            function updateLightboxImg() {
+                lightboxImg.src = galleryData[currentIndex].src;
+            }
+
+            function nextImg() {
+                currentIndex = (currentIndex + 1) % galleryData.length;
+                updateLightboxImg();
+            }
+
+            function prevImg() {
+                currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+                updateLightboxImg();
+            }
+
+            btnClose.addEventListener('click', closeLightbox);
+            btnNext.addEventListener('click', nextImg);
+            btnPrev.addEventListener('click', prevImg);
+
+            // Close on background click
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+
+            // Keyboard Navigation
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('hidden')) {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowRight') nextImg();
+                    if (e.key === 'ArrowLeft') prevImg();
+                }
+            });
+
+            /* Contact Form Validation */
+            const form = document.getElementById('contactForm');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                
+                const inputs = form.querySelectorAll('input[required], textarea[required]');
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('border-red-500');
+                        input.nextElementSibling.classList.remove('hidden');
+                    } else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+                        isValid = false;
+                        input.classList.add('border-red-500');
+                        input.nextElementSibling.classList.remove('hidden');
+                    } else {
+                        input.classList.remove('border-red-500');
+                        input.nextElementSibling.classList.add('hidden');
+                    }
+                });
+
+                if (isValid) {
+                    // Simulate sending
+                    const btn = form.querySelector('button[type="submit"]');
+                    const originalText = btn.innerText;
+                    btn.innerText = 'Sending...';
+                    btn.disabled = true;
+                    
+                    setTimeout(() => {
+                        form.reset();
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                        const successMsg = document.getElementById('success-msg');
+                        successMsg.classList.remove('hidden');
+                        setTimeout(() => successMsg.classList.add('hidden'), 5000);
+                    }, 1500);
+                }
+            });
+
+            // Clear errors on input
+            form.querySelectorAll('input, textarea').forEach(input => {
+                input.addEventListener('input', () => {
+                    input.classList.remove('border-red-500');
+                    if(input.nextElementSibling && input.nextElementSibling.classList.contains('error-msg')) {
+                        input.nextElementSibling.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
